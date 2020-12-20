@@ -29,3 +29,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### Node modules files ###
+node_modules
+
+### Mvn ###
+.mvn
