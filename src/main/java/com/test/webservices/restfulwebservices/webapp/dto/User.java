@@ -4,10 +4,14 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @ApiModel(description = "User main details")
+@Entity
 public class User extends RepresentationModel<User> {
 
     protected User(){};
@@ -19,6 +23,8 @@ public class User extends RepresentationModel<User> {
         this.email = email;
     }
 
+    @Id
+    @GeneratedValue
     private Integer id;
 
     private String name;
