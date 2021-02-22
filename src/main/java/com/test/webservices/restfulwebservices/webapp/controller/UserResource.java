@@ -3,6 +3,7 @@ package com.test.webservices.restfulwebservices.webapp.controller;
 import com.test.webservices.restfulwebservices.webapp.config.InternationalizationLocale;
 import com.test.webservices.restfulwebservices.webapp.exception.UserNotFoundException;
 import com.test.webservices.restfulwebservices.webapp.dto.User;
+import com.test.webservices.restfulwebservices.webapp.repository.UserRepository;
 import com.test.webservices.restfulwebservices.webapp.service.UserDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -21,25 +23,26 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserResource {
 
     @Autowired
-    private UserDaoService userService;
+    private UserDaoService userService; //user service with static fields
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private InternationalizationLocale interLocale;
 
     @RequestMapping(method = RequestMethod.GET, path = "/users")
     public List<User> retrieveAllUsers() {
-        return userService.findAll();
+        return userRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/users/{id}")
     public User retrieveSpecificUserById(@PathVariable int id) {
-        User user = userService.findOne(id);
-        if (user == null) {
+        Optional<User> user = userRepository.findById(id);
+        if (!user.isPresent()) {
             throw new UserNotFoundException("User id is incorrect: " + id);
         }
-        user.add(linkTo(methodOn(getClass()).retrieveAllUsers()).withRel("all-users"));
-
-        return user;
+        return (user.get()).add(linkTo(methodOn(getClass()).retrieveAllUsers()).withRel("all-users"));
     }
 
     @RequestMapping(method = RequestMethod.POST, path= "/users")
