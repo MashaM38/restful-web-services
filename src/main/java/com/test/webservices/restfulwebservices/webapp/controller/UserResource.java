@@ -47,7 +47,7 @@ public class UserResource {
 
     @RequestMapping(method = RequestMethod.POST, path= "/users")
     public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
-        User savedUser = userService.save(user);
+        User savedUser = userRepository.save(user);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -60,10 +60,7 @@ public class UserResource {
 
     @RequestMapping(method = RequestMethod.DELETE, path= "/users/{id}")
     public void deleteUser(@PathVariable int id) {
-        User user = userService.deleteById(id);
-        if (user == null) {
-            throw new UserNotFoundException("User id is incorrect: " + id);
-        }
+        userRepository.deleteById(id);
     }
     @RequestMapping(method = RequestMethod.GET, path = "/users/internationalized")
     public String retrieveUserInternationalized() {

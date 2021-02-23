@@ -24,7 +24,6 @@ public class User extends RepresentationModel<User> {
     }
 
     @Id
-    @GeneratedValue
     private Integer id;
 
     private String name;
