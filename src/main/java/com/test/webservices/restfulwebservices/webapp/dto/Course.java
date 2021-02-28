@@ -1,5 +1,8 @@
 package com.test.webservices.restfulwebservices.webapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,6 +14,7 @@ public class Course {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Author author;
 
     public Integer getId() {

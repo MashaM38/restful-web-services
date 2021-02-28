@@ -2,7 +2,9 @@ package com.test.webservices.restfulwebservices.webapp.controller;
 
 import com.test.webservices.restfulwebservices.webapp.config.InternationalizationLocale;
 import com.test.webservices.restfulwebservices.webapp.dto.Author;
+import com.test.webservices.restfulwebservices.webapp.dto.Course;
 import com.test.webservices.restfulwebservices.webapp.dto.User;
+import com.test.webservices.restfulwebservices.webapp.exception.AuthorNotFoundException;
 import com.test.webservices.restfulwebservices.webapp.exception.UserNotFoundException;
 import com.test.webservices.restfulwebservices.webapp.repository.AuthorRepository;
 import com.test.webservices.restfulwebservices.webapp.repository.UserRepository;
@@ -39,7 +41,7 @@ public class AuthorResource {
     public Author retrieveSpecificAuthorById(@PathVariable int id) {
         Optional<Author> author = authorRepository.findById(id);
         if (!author.isPresent()) {
-            throw new UserNotFoundException("Author id is incorrect: " + id);
+            throw new AuthorNotFoundException("Author id is incorrect: " + id);
         }
         return (author.get()).add(linkTo(methodOn(getClass()).retrieveAllAuthors()).withRel("all-authors"));
     }
@@ -65,5 +67,14 @@ public class AuthorResource {
     @RequestMapping(method = RequestMethod.GET, path = "/authors/internationalized")
     public String retrieveAuthorInternationalized() {
         return interLocale.bundleMessageSource().getMessage("author.message", null, LocaleContextHolder.getLocale());
+    }
+
+    @GetMapping("/authors/{id}/courses")
+    public List<Course> retrieveCourses(@PathVariable int id) {
+        Optional<Author> authorOptional = authorRepository.findById(id);
+        if (!authorOptional.isPresent()) {
+            throw new AuthorNotFoundException("Author id is incorrect: " + id);
+        }
+        return authorOptional.get().getCourses();
     }
 }
