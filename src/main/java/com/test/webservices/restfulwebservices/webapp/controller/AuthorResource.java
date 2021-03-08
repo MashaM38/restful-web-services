@@ -7,6 +7,7 @@ import com.test.webservices.restfulwebservices.webapp.dto.User;
 import com.test.webservices.restfulwebservices.webapp.exception.AuthorNotFoundException;
 import com.test.webservices.restfulwebservices.webapp.exception.UserNotFoundException;
 import com.test.webservices.restfulwebservices.webapp.repository.AuthorRepository;
+import com.test.webservices.restfulwebservices.webapp.repository.CourseRepository;
 import com.test.webservices.restfulwebservices.webapp.repository.UserRepository;
 import com.test.webservices.restfulwebservices.webapp.service.UserDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class AuthorResource {
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Autowired
     private InternationalizationLocale interLocale;
@@ -76,5 +80,26 @@ public class AuthorResource {
             throw new AuthorNotFoundException("Author id is incorrect: " + id);
         }
         return authorOptional.get().getCourses();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path= "/authors/{id}/courses")
+    public ResponseEntity<Object> createCourse(@PathVariable int id, @RequestBody Course course) {
+        Optional<Author> authorOptional = authorRepository.findById(id);
+        if (!authorOptional.isPresent()) {
+            throw new AuthorNotFoundException("Author id is incorrect: " + id);
+        }
+
+        Author author = authorOptional.get();
+        course.setAuthor(author);
+        courseRepository.save(course);
+
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(course.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 }
