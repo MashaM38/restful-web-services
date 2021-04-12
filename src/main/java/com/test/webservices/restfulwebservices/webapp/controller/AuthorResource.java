@@ -93,7 +93,6 @@ public class AuthorResource {
         course.setAuthor(author);
         courseRepository.save(course);
 
-
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
