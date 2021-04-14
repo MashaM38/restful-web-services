@@ -4,10 +4,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Objects;
 
 @ApiModel(description = "User main details")
@@ -33,6 +32,9 @@ public class User extends RepresentationModel<User> {
     private String surname;
 
     private String email;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Course> courses;
 
     public Integer getId() {
         return id;
@@ -66,6 +68,14 @@ public class User extends RepresentationModel<User> {
         this.email = email;
     }
 
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -73,6 +83,7 @@ public class User extends RepresentationModel<User> {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
+                ", courses=" + courses +
                 '}';
     }
 
@@ -80,15 +91,17 @@ public class User extends RepresentationModel<User> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         User user = (User) o;
         return id.equals(user.id) &&
                 name.equals(user.name) &&
                 surname.equals(user.surname) &&
-                Objects.equals(email, user.email);
+                email.equals(user.email) &&
+                Objects.equals(courses, user.courses);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, surname, email);
+        return Objects.hash(super.hashCode(), id, name, surname, email, courses);
     }
 }
