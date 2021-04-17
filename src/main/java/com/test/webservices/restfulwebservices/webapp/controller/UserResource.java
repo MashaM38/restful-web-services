@@ -1,12 +1,13 @@
 package com.test.webservices.restfulwebservices.webapp.controller;
 
 import com.test.webservices.restfulwebservices.webapp.config.InternationalizationLocale;
-import com.test.webservices.restfulwebservices.webapp.dto.Author;
 import com.test.webservices.restfulwebservices.webapp.dto.Course;
-import com.test.webservices.restfulwebservices.webapp.exception.AuthorNotFoundException;
+import com.test.webservices.restfulwebservices.webapp.dto.UserCourse;
 import com.test.webservices.restfulwebservices.webapp.exception.UserNotFoundException;
+import com.test.webservices.restfulwebservices.webapp.exception.СourseNotFoundException;
 import com.test.webservices.restfulwebservices.webapp.dto.User;
 import com.test.webservices.restfulwebservices.webapp.repository.CourseRepository;
+import com.test.webservices.restfulwebservices.webapp.repository.UserCourseRepository;
 import com.test.webservices.restfulwebservices.webapp.repository.UserRepository;
 import com.test.webservices.restfulwebservices.webapp.service.UserDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +36,9 @@ public class UserResource {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private UserCourseRepository userCourseRepository;
 
     @Autowired
     private InternationalizationLocale interLocale;
@@ -72,31 +77,16 @@ public class UserResource {
 
     @GetMapping("/users/{id}/courses")
     public List<Course> retrieveCourses(@PathVariable int id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (!userOptional.isPresent()) {
-            throw new UserNotFoundException("User ID is incorrect: " + id);
+        List<Course> courses = new ArrayList<>();
+        List<UserCourse> userCourseOptional = userCourseRepository.findByUserCourseId_UserId(id);
+        for (UserCourse c: userCourseOptional) {
+            Optional<Course> courseOptional = courseRepository.findById(c.getUserCourseId().getCourseId());
+            if (!courseOptional.isPresent()) {
+                throw new СourseNotFoundException("Course is not found for User ID: " + id);
+            }
+            courses.add(courseOptional.get());
         }
-        return userOptional.get().getCourses();
-    }
-
-    @RequestMapping(method = RequestMethod.POST, path= "/users/{id}/courses")
-    public ResponseEntity<Object> createCourse(@PathVariable int id, @RequestBody Course course) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (!userOptional.isPresent()) {
-            throw new UserNotFoundException("User ID is incorrect: " + id);
-        }
-
-        User user = userOptional.get();
-        course.setUser(user);
-        courseRepository.save(course);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(course.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).build();
+        return courses;
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path= "/users/{id}")

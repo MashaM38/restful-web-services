@@ -1,13 +1,11 @@
 package com.test.webservices.restfulwebservices.webapp.controller;
 
-import com.test.webservices.restfulwebservices.webapp.config.InternationalizationLocale;
 import com.test.webservices.restfulwebservices.webapp.dto.Author;
 import com.test.webservices.restfulwebservices.webapp.dto.Course;
+import com.test.webservices.restfulwebservices.webapp.exception.AuthorNotFoundException;
 import com.test.webservices.restfulwebservices.webapp.exception.СourseNotFoundException;
-import com.test.webservices.restfulwebservices.webapp.repository.AuthorRepository;
 import com.test.webservices.restfulwebservices.webapp.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -40,6 +38,15 @@ public class CourseResource {
         return (course.get()).add(linkTo(methodOn(getClass()).retrieveAllCourses()).withRel("all-courses"));
     }
 
+    @GetMapping("/courses/{id}/author")
+    public Author retrieveCourseAuthor(@PathVariable int id) {
+        Optional<Course> courseOptional = courseRepository.findById(id);
+        if (!courseOptional.isPresent()) {
+            throw new СourseNotFoundException("Course ID is incorrect: " + id);
+        }
+        return courseOptional.get().getAuthor();
+    }
+
     @RequestMapping(method = RequestMethod.POST, path= "/courses")
     public ResponseEntity<Object> createCourse(@Valid @RequestBody Course course) {
         Course savedCourse = courseRepository.save(course);
@@ -57,5 +64,4 @@ public class CourseResource {
     public void deleteCourse(@PathVariable int id) {
         courseRepository.deleteById(id);
     }
-
 }

@@ -33,8 +33,8 @@ public class User extends RepresentationModel<User> {
 
     private String email;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Course> courses;
+//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+//    private List<Course> courses;
 
     public Integer getId() {
         return id;
@@ -68,13 +68,13 @@ public class User extends RepresentationModel<User> {
         this.email = email;
     }
 
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
+//    public List<Course> getCourses() {
+//        return courses;
+//    }
+//
+//    public void setCourses(List<Course> courses) {
+//        this.courses = courses;
+//    }
 
     @Override
     public String toString() {
@@ -83,7 +83,7 @@ public class User extends RepresentationModel<User> {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
-                ", courses=" + courses +
+                //", courses=" + courses +
                 '}';
     }
 
@@ -96,12 +96,12 @@ public class User extends RepresentationModel<User> {
         return id.equals(user.id) &&
                 name.equals(user.name) &&
                 surname.equals(user.surname) &&
-                email.equals(user.email) &&
-                Objects.equals(courses, user.courses);
+                email.equals(user.email);
+                //Objects.equals(courses, user.courses);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id, name, surname, email, courses);
+        return Objects.hash(super.hashCode(), id, name, surname, email);
     }
 }

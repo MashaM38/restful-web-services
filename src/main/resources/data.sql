@@ -5,6 +5,12 @@ insert into User values (3, 'vic_merril@gmail.com', 'Victoria', 'Merril');
 insert into Author values (10, 'susan_roger_test@gmail.com', 'Susan', 'Rodger');
 insert into Author values (20, 'mia_minnes_test@gmail.com', 'Mia', 'Minnes');
 
-insert into Course values (1010, 'Java Programming and Software Engineering Fundamentals', 10, 1);
-insert into Course values (1011, 'Programming Foundations with JavaScript, HTML and CSS', 10, 1);
-insert into Course values (2010, 'Object Oriented Java Programming: Data Structures and Beyond Specialization', 20, 2);
+insert into Course values (1010, 'Java Programming and Software Engineering Fundamentals', 10);
+insert into Course values (1011, 'Programming Foundations with JavaScript, HTML and CSS', 10);
+insert into Course values (2010, 'Object Oriented Java Programming: Data Structures and Beyond Specialization', 20);
+
+insert into UserCourse values (1010, 1);
+insert into UserCourse values (1011, 1);
+insert into UserCourse values (2010, 1);
+insert into UserCourse values (1010, 2);
+insert into UserCourse values (2010, 2);

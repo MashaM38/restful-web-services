@@ -10,18 +10,23 @@ import javax.persistence.*;
 @Entity
 public class Course extends RepresentationModel<Course> {
     @Id
-    @GeneratedValue
+    //TODO: @GeneratedValue
     private Integer id;
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Author author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private User user;
+    public Course() {
+    }
+
+    public Course(Integer id, String name, Author author) {
+        this.id = id;
+        this.name = name;
+        this.author = author;
+    }
 
     public Integer getId() {
         return id;
@@ -47,21 +52,12 @@ public class Course extends RepresentationModel<Course> {
         this.author = author;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Override
     public String toString() {
         return "Course{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", author=" + author +
-                ", user=" + user +
                 '}';
     }
 }
