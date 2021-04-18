@@ -27,7 +27,6 @@ import java.util.Optional;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
 @RestController
 public class UserResource {
 
@@ -73,7 +72,7 @@ public class UserResource {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/users")
+    @RequestMapping(method = {RequestMethod.PUT}, path = "/users")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody User user) {
         User updatedUser = userRepository.save(user);
         return new ResponseEntity<Object>(updatedUser, HttpStatus.OK);
