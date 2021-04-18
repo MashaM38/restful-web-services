@@ -3,6 +3,7 @@ package com.test.webservices.restfulwebservices.webapp.controller;
 import com.test.webservices.restfulwebservices.webapp.config.InternationalizationLocale;
 import com.test.webservices.restfulwebservices.webapp.dto.Course;
 import com.test.webservices.restfulwebservices.webapp.dto.UserCourse;
+import com.test.webservices.restfulwebservices.webapp.dto.UserCourseId;
 import com.test.webservices.restfulwebservices.webapp.exception.UserNotFoundException;
 import com.test.webservices.restfulwebservices.webapp.exception.СourseNotFoundException;
 import com.test.webservices.restfulwebservices.webapp.dto.User;
@@ -87,6 +88,20 @@ public class UserResource {
             courses.add(courseOptional.get());
         }
         return courses;
+    }
+
+    @PostMapping("/users/{id}/courses")
+    public ResponseEntity<Object> createCourseForUser(@PathVariable int id, @RequestBody UserCourseId userCourseId) {
+        UserCourseId userCourseIdObj = new UserCourseId(id, userCourseId.getCourseId());
+        UserCourse savedUserCourse = userCourseRepository.save(new UserCourse(userCourseIdObj));
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedUserCourse.getUserCourseId().getCourseId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path= "/users/{id}")
