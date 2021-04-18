@@ -26,6 +26,7 @@ import java.util.Optional;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
 @RestController
 public class UserResource {
 
@@ -105,9 +106,13 @@ public class UserResource {
     }
 
     @DeleteMapping("/users/{id}/courses")
-    public void deleteUserCourse(@PathVariable int id, @RequestBody UserCourseId userCourseId) {
+    public ResponseEntity<Void> deleteUserCourse(@PathVariable int id, @RequestBody UserCourseId userCourseId) {
         UserCourseId userCourseIdObj = new UserCourseId(id, userCourseId.getCourseId());
         userCourseRepository.deleteById(userCourseIdObj);
+        if (userCourseIdObj.getCourseId() != null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path= "/users/{id}")
