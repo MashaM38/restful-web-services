@@ -13,6 +13,7 @@ import com.test.webservices.restfulwebservices.webapp.repository.UserRepository;
 import com.test.webservices.restfulwebservices.webapp.service.UserDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -70,6 +71,12 @@ public class UserResource {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/users")
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody User user) {
+        User updatedUser = userRepository.save(user);
+        return new ResponseEntity<Object>(updatedUser, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/users/internationalized")
