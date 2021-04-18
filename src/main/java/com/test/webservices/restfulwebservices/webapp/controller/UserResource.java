@@ -104,6 +104,12 @@ public class UserResource {
         return ResponseEntity.created(location).build();
     }
 
+    @DeleteMapping("/users/{id}/courses")
+    public void deleteUserCourse(@PathVariable int id, @RequestBody UserCourseId userCourseId) {
+        UserCourseId userCourseIdObj = new UserCourseId(id, userCourseId.getCourseId());
+        userCourseRepository.deleteById(userCourseIdObj);
+    }
+
     @RequestMapping(method = RequestMethod.DELETE, path= "/users/{id}")
     public void deleteUser(@PathVariable int id) {
         userRepository.deleteById(id);
