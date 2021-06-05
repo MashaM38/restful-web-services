@@ -97,6 +97,17 @@ public class UserResource {
         return courses;
     }
 
+    @GetMapping("/users/{user_id}/courses/{course_id}")
+    public UserCourseId retrieveCourse(@PathVariable int user_id, @PathVariable int course_id) {
+        List<UserCourse> userCourseOptional = userCourseRepository.findByUserCourseId_UserId(user_id);
+        for (UserCourse c: userCourseOptional) {
+            if (c.getUserCourseId().getCourseId() == course_id) {
+                return c.getUserCourseId();
+            }
+        }
+        return null;
+    }
+
     @PostMapping("/users/{id}/courses")
     public ResponseEntity<Object> createCourseForUser(@PathVariable int id, @RequestBody UserCourseId userCourseId) {
         UserCourseId userCourseIdObj = new UserCourseId(id, userCourseId.getCourseId());
