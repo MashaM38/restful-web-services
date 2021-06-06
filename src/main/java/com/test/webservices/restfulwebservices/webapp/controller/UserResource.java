@@ -111,6 +111,10 @@ public class UserResource {
     @PostMapping("/users/{id}/courses")
     public ResponseEntity<Object> createCourseForUser(@PathVariable int id, @RequestBody UserCourseId userCourseId) {
         UserCourseId userCourseIdObj = new UserCourseId(id, userCourseId.getCourseId());
+        Optional<Course> courseOptional = courseRepository.findById(userCourseIdObj.getCourseId());
+        if (!courseOptional.isPresent()) {
+            throw new СourseNotFoundException("Course ID is not found: " + userCourseIdObj.getCourseId());
+        }
         UserCourse savedUserCourse = userCourseRepository.save(new UserCourse(userCourseIdObj));
 
         URI location = ServletUriComponentsBuilder
