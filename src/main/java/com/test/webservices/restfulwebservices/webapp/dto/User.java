@@ -33,9 +33,6 @@ public class User extends RepresentationModel<User> {
 
     private String email;
 
-//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-//    private List<Course> courses;
-
     public Integer getId() {
         return id;
     }
