@@ -1,13 +1,12 @@
-node {
-    label 'test'
-    properties([parameters([extendedChoice(multiSelectDelimiter: ',',
-            name: 'PROFILE',
-            quoteValue: false,
-            saveJSONParameterToFile: false,
-            type: 'PT_SINGLE_SELECT',
-            value: 'unit-tests,long-unit-tests',
-            visibleItemCount: 2)])])
+properties([parameters([extendedChoice(multiSelectDelimiter: ',',
+        name: 'PROFILE',
+        quoteValue: false,
+        saveJSONParameterToFile: false,
+        type: 'PT_SINGLE_SELECT',
+        value: 'unit-tests,long-unit-tests',
+        visibleItemCount: 2)])])
 
+node {
     def mvnHome
     stage('Preparation') {
         mvnHome = tool 'M3'
