@@ -10,7 +10,10 @@ node {
     def mvnHome
     stage('Preparation') {
         mvnHome = tool 'M3'
-        git branch: 'main', url: 'https://github.com/MashaM38/restful-web-services'
+
+        git branch: 'main',
+            credentialsId: 'SSH_Jenkins',
+            url: 'ssh://git@github.com/MashaM38/restful-web-services.git'
     }
 
     stage('Build') {
