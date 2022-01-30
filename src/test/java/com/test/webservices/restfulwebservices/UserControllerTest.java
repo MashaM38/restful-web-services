@@ -2,6 +2,7 @@ package com.test.webservices.restfulwebservices;
 
 import com.test.webservices.restfulwebservices.webapp.controller.UserResource;
 import com.test.webservices.restfulwebservices.webapp.dto.User;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -60,6 +61,7 @@ public class UserControllerTest {
                 .getContentAsString(), true);
     }
 
+    @Disabled //failed test example
     @Test
     @Tag("LongUnitTest")
     public void checkUserDetails() throws Exception {
@@ -73,6 +75,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.surname").value("XXXWalker"));
 
     }
+
     @Test
     @Tag("LongUnitTest")
     public void checkUserEmail() throws Exception {
